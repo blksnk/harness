@@ -35,7 +35,8 @@
     "test:types": "tsc --noEmit",
     "test:lint": "eslint .",
     "lib:build": "tsc",
-    "lib:pub": "npm publish --access public"
+    "lib:pub": "npm publish --access public",
+    "prepublishOnly": "bun lib:build"
   },
   "type": "module",
   "dependencies": {

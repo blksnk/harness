@@ -6,13 +6,16 @@ import type {
   HarnessFnReference,
   HarnessKey,
 } from "@libharness/core";
-import { deepValueOf } from "@ubloimmo/front-util";
 import {
   HarnessCallError,
   HarnessReferenceError,
   harnessSubset,
 } from "@libharness/core";
+import { deepValueOf } from "@ubloimmo/front-util";
 
+/**
+ * Exposes methods to interact with a {@link Harness}
+ */
 export class HarnessConsumer<TDefinition extends Definition> {
   constructor(private readonly _harness: Harness<TDefinition>) {}
 
