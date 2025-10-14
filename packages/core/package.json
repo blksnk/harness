@@ -2,7 +2,7 @@
   "name": "@libharness/core",
   "description": "Core of a generic binding layer to link any consumer to any data provider following a shared interface",
   "private": false,
-  "version": "0.0.1",
+  "version": "0.0.2",
   "module": "src/index.ts",
   "main": "lib/index.ts",
   "files": [
