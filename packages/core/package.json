@@ -13,6 +13,16 @@
       "types": "./lib/index.d.ts",
       "import": "./lib/index.js",
       "default": "./lib/index.js"
+    },
+    "./errors": {
+      "types": "./lib/src/errors/index.d.ts",
+      "import": "./lib/src/errors/index.js",
+      "default": "./lib/src/errors/index.js"
+    },
+    "./types": {
+      "types": "./lib/src/types/index.d.ts",
+      "import": "./lib/src/types/index.js",
+      "default": "./lib/src/types/index.js"
     }
   },
   "license": "MIT",
