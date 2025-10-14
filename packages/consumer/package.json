@@ -1,5 +1,5 @@
 {
-  "name": "@libharness/harness",
+  "name": "@libharness/consumer",
   "description": "Generic binding layer to link any consumer to any data provider following a shared interface",
   "private": false,
   "version": "0.0.1",
@@ -13,21 +13,6 @@
       "types": "./lib/index.d.ts",
       "import": "./lib/index.js",
       "default": "./lib/index.js"
-    },
-    "./consumer": {
-      "types": "./lib/src/consumer/index.d.ts",
-      "import": "./lib/src/consumer/index.js",
-      "default": "./lib/src/consumer/index.js"
-    },
-    "./factory": {
-      "types": "./lib/src/factory/index.d.ts",
-      "import": "./lib/src/factory/index.js",
-      "default": "./lib/src/factory/index.js"
-    },
-    "./setup": {
-      "types": "./lib/src/setup/index.d.ts",
-      "import": "./lib/src/setup/index.js",
-      "default": "./lib/src/setup/index.js"
     }
   },
   "license": "MIT",
@@ -56,6 +41,7 @@
   },
   "type": "module",
   "dependencies": {
+    "@libharness/core": "^0.0.2",
     "@ubloimmo/front-util": "^0.0.19"
   }
 }
