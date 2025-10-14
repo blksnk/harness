@@ -39,7 +39,7 @@
   },
   "type": "module",
   "dependencies": {
-    "@libharness/core": "^0.0.1",
+    "@libharness/core": "^0.0.3",
     "@ubloimmo/front-util": "^0.0.19"
   }
 }
