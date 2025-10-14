@@ -1,0 +1,46 @@
+{
+  "name": "@libharness/core",
+  "description": "Core of a generic binding layer to link any consumer to any data provider following a shared interface",
+  "private": false,
+  "version": "0.0.1",
+  "module": "src/index.ts",
+  "main": "lib/index.ts",
+  "files": [
+    "lib"
+  ],
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "import": "./lib/index.js",
+      "default": "./lib/index.js"
+    }
+  },
+  "license": "MIT",
+  "author": "Jean-Nicolas Veigel art.jnveigel@gmail.com",
+  "homepage": "https://github.com/blksnk/harness",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/blksnk/harness.git"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.58.0",
+    "@typescript-eslint/parser": "^5.58.0",
+    "eslint": "^8.38.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-local-rules": "^1.1.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "eslint-plugin-storybook": "^0.6.15",
+    "prettier": "^2.8.7",
+    "typescript": "^5.9.3"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test:types": "tsc --noEmit"
+  },
+  "type": "module",
+  "dependencies": {
+    "@ubloimmo/front-util": "^0.0.19"
+  }
+}
