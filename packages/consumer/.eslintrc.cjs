@@ -17,19 +17,6 @@ module.exports = {
     ecmaVersion: 12,
     sourceType: "module",
   },
-  settings: {
-    react: {
-      version: "detect",
-    },
-    propWrapperFunctions: ["forbidExtraProps"],
-    linkComponents: [
-      "Hyperlink",
-      {
-        name: "Link",
-        linkAttribute: "to",
-      },
-    ],
-  },
   plugins: ["@typescript-eslint"],
   ignorePatterns: ["**/dist/*.js"],
   rules: {

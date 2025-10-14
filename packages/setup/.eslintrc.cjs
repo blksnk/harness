@@ -7,10 +7,7 @@ module.exports = {
   extends: [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "plugin:react/recommended",
-    "plugin:react-hooks/recommended",
     "plugin:prettier/recommended",
-    "plugin:storybook/recommended",
   ],
   parser: "@typescript-eslint/parser",
   parserOptions: {
@@ -20,25 +17,12 @@ module.exports = {
     ecmaVersion: 12,
     sourceType: "module",
   },
-  settings: {
-    react: {
-      version: "detect",
-    },
-    propWrapperFunctions: ["forbidExtraProps"],
-    linkComponents: [
-      "Hyperlink",
-      {
-        name: "Link",
-        linkAttribute: "to",
-      },
-    ],
-  },
-  plugins: ["react", "react-hooks", "@typescript-eslint"],
+  plugins: ["@typescript-eslint"],
   ignorePatterns: ["**/dist/*.js"],
   rules: {
     // generic
     "no-console": [
-      "warn",
+      "error",
       {
         allow: ["warn", "error"],
       },
@@ -46,10 +30,6 @@ module.exports = {
     "no-var": "error",
     eqeqeq: ["error", "always"],
     "no-dupe-keys": "error",
-    // react
-    "react/react-in-jsx-scope": 0,
-    "react-hooks/exhaustive-deps": 2,
-    "react/display-name": 0,
     // typescript
     "@typescript-eslint/no-explicit-any": "error",
     "@typescript-eslint/no-unused-expressions": "error",

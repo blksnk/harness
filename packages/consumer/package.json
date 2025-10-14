@@ -32,9 +32,10 @@
     "typescript": "^5.9.3"
   },
   "scripts": {
-    "build": "tsc",
     "test:types": "tsc --noEmit",
-    "test:lint": "eslint ."
+    "test:lint": "eslint .",
+    "lib:build": "tsc",
+    "lib:pub": "npm publish --access public"
   },
   "type": "module",
   "dependencies": {
