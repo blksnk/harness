@@ -1,4 +1,8 @@
-(cd ./packages/core ; bun run build)
-(cd ./packages/consumer ; bun run build)
-(cd ./packages/factory ; bun run build)
-(cd ./packages/setup ; bun run build)
+echo "Building core..."
+(cd ./packages/core ; bun lib:build)
+echo "Building consumer..."
+(cd ./packages/consumer ; bun lib:build)
+echo "Building factory..."
+(cd ./packages/factory ; bun lib:build)
+echo "Building setup..."
+(cd ./packages/setup ; bun lib:build)
