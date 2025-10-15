@@ -2,8 +2,8 @@ import { HarnessReferenceError } from "@errors";
 import type {
   AnyFn,
   Definition,
-  DefinitionSubset,
   DefinitionSubsetKey,
+  DefinitionSubsetStrict,
   Harness,
   HarnessSubset,
   HarnessSubsetKey,
@@ -27,11 +27,13 @@ export function definitionSubset<
 >(
   definition: TDefinition,
   subsetKey: TSubsetKey
-): DefinitionSubset<TDefinition, TSubsetKey> {
+): DefinitionSubsetStrict<TDefinition, TSubsetKey> {
   const found = deepValueOf(definition, subsetKey, true);
   if (!found)
     throw new HarnessReferenceError(subsetKey, "not found in base definition");
-  return validateDefinition(found);
+  return validateDefinition<DefinitionSubsetStrict<TDefinition, TSubsetKey>>(
+    found
+  );
 }
 
 /**
@@ -62,7 +64,7 @@ export function harnessSubset<
       subsetKey,
       "points to a harness function, expected a harness object"
     );
-  if (!isHarness<DefinitionSubset<TDefinition, TSubsetKey>>(found))
+  if (!isHarness<DefinitionSubsetStrict<TDefinition, TSubsetKey>>(found))
     throw new HarnessReferenceError(
       subsetKey,
       "does not point to a valid harness object"

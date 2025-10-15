@@ -16,7 +16,15 @@ export type DefinitionSubsetKey<TDefinition extends Definition> = DeepKeyOfType<
 export type DefinitionSubset<
   TDefinition extends Definition,
   TSubsetKey extends DefinitionSubsetKey<TDefinition>
-> = Definition & DeepValueOf<TDefinition, TSubsetKey>;
+> = DeepValueOf<TDefinition, TSubsetKey>;
+
+/**
+ * A stricter variant of {@link Definition subset} that enforces an intersection with {@link Definition}
+ */
+export type DefinitionSubsetStrict<
+  TDefinition extends Definition,
+  TSubsetKey extends DefinitionSubsetKey<TDefinition>
+> = Definition & DefinitionSubset<TDefinition, TSubsetKey>;
 
 /**
  * Any harness key that points to a nested harness
@@ -32,4 +40,4 @@ export type HarnessSubsetKey<TDefinition extends Definition> = DeepKeyOfType<
 export type HarnessSubset<
   TDefinition extends Definition,
   TSubsetKey extends DefinitionSubsetKey<TDefinition>
-> = Harness<DefinitionSubset<TDefinition, TSubsetKey>>;
+> = Harness<DefinitionSubsetStrict<TDefinition, TSubsetKey>>;
