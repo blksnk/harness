@@ -1,8 +1,10 @@
-import type { Definition, HarnessKey } from "@types";
+import type { Definition, Harness, HarnessKey } from "@types";
 
-export class HarnessCallError<TDefinition extends Definition> extends Error {
+export class HarnessCallError<
+  THarness extends Harness<Definition>
+> extends Error {
   constructor(
-    public readonly callKey: HarnessKey<TDefinition>,
+    public readonly callKey: HarnessKey<THarness>,
     public readonly callArguments: unknown,
     public readonly callError: Error | unknown
   ) {

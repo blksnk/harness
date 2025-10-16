@@ -2,15 +2,14 @@ import { HarnessReferenceError } from "@errors";
 import type {
   AnyFn,
   Definition,
+  DefinitionSubset,
   DefinitionSubsetKey,
-  DefinitionSubsetStrict,
   Harness,
   HarnessSubset,
   HarnessSubsetKey,
 } from "@types";
-import { deepValueOf, isFunction } from "@ubloimmo/front-util";
+import { isFunction } from "@ubloimmo/front-util";
 import { validateDefinition } from "./definition.utils";
-import { isHarness } from "./harness.utils";
 
 /**
  * Returns a {@link Definition}'s subset
@@ -27,13 +26,11 @@ export function definitionSubset<
 >(
   definition: TDefinition,
   subsetKey: TSubsetKey
-): DefinitionSubsetStrict<TDefinition, TSubsetKey> {
-  const found = deepValueOf(definition, subsetKey, true);
+): DefinitionSubset<TDefinition, TSubsetKey> {
+  const found = definition[subsetKey];
   if (!found)
     throw new HarnessReferenceError(subsetKey, "not found in base definition");
-  return validateDefinition<DefinitionSubsetStrict<TDefinition, TSubsetKey>>(
-    found
-  );
+  return validateDefinition<DefinitionSubset<TDefinition, TSubsetKey>>(found);
 }
 
 /**
@@ -46,17 +43,13 @@ export function definitionSubset<
  * @returns {HarnessSubset<TDefinition, TSubsetKey>} A subset of the base harness
  */
 export function harnessSubset<
-  TDefinition extends Definition,
-  TSubsetKey extends DefinitionSubsetKey<TDefinition>
+  THarness extends Harness<Definition>,
+  TSubsetKey extends HarnessSubsetKey<THarness>
 >(
-  harness: Harness<TDefinition>,
+  harness: THarness,
   subsetKey: TSubsetKey
-): HarnessSubset<TDefinition, TSubsetKey> {
-  const found = deepValueOf(
-    harness,
-    subsetKey as HarnessSubsetKey<TDefinition>,
-    true
-  );
+): HarnessSubset<THarness, TSubsetKey> {
+  const found = harness[subsetKey];
   if (!found)
     throw new HarnessReferenceError(subsetKey, "not found in base harness");
   if (isFunction<AnyFn>(found))
@@ -64,10 +57,5 @@ export function harnessSubset<
       subsetKey,
       "points to a harness function, expected a harness object"
     );
-  if (!isHarness<DefinitionSubsetStrict<TDefinition, TSubsetKey>>(found))
-    throw new HarnessReferenceError(
-      subsetKey,
-      "does not point to a valid harness object"
-    ).cause;
   return found;
 }

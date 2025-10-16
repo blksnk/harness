@@ -3,6 +3,7 @@ import {
   DefinitionSubset,
   DefinitionSubsetKey,
   Harness,
+  HarnessFnReference,
   HarnessKey,
   HarnessSubset,
 } from "@types";
@@ -26,6 +27,9 @@ type NullishPrimitiveFns = {
 type TestDefinition = PrimitiveFns & {
   nested: PrimitiveFns & {
     nestedNullish: NullishPrimitiveFns;
+  };
+  nested2: {
+    nested2Fn: () => false;
   };
 };
 
@@ -55,6 +59,9 @@ const _testDefinition: TestDefinition = {
       unknownFn: () => undefined,
     },
   },
+  nested2: {
+    nested2Fn: () => false,
+  },
 };
 
 type DefinitionSubsetKeys<TDefinition extends Definition> = {
@@ -63,7 +70,7 @@ type DefinitionSubsetKeys<TDefinition extends Definition> = {
 
 const _definitionsubsetKeys: DefinitionSubsetKeys<TestDefinition> = {
   nested: true,
-  "nested.nestedNullish": true,
+  nested2: true,
 };
 
 const _nestedDefinitionSubsetKeys: DefinitionSubsetKey<
@@ -80,11 +87,11 @@ const _definitionNestedNullishSubset: DefinitionSubset<
 
 type TestHarness = Harness<TestDefinition>;
 
-type HarnessFnKeys<TDefinition extends Definition> = {
-  [TKey in HarnessKey<TDefinition>]: true;
+type HarnessFnKeys<THarness extends Harness<Definition>> = {
+  [TKey in HarnessKey<THarness>]: true;
 };
 
-const _keys: HarnessFnKeys<TestDefinition> = {
+const _keys: HarnessFnKeys<TestHarness> = {
   voidFn: true,
   booleanFn: true,
   numberFn: true,
@@ -106,6 +113,7 @@ const _keys: HarnessFnKeys<TestDefinition> = {
   "nested.nestedNullish.stringFn": true,
   "nested.nestedNullish.anyFn": true,
   "nested.nestedNullish.unknownFn": true,
+  "nested2.nested2Fn": true,
 };
 
 const _testHarness: TestHarness = {
@@ -134,14 +142,43 @@ const _testHarness: TestHarness = {
       unknownFn: async () => undefined,
     },
   },
+  nested2: {
+    nested2Fn: async () => false,
+  },
 };
 
-const _nestedSubset: HarnessSubset<TestDefinition, "nested"> =
-  _testHarness.nested;
+type HarnessFnReferences<THarness extends Harness<Definition>> = {
+  [TKey in HarnessKey<THarness>]: HarnessFnReference<THarness, TKey>;
+};
+
+const _fnReferences: HarnessFnReferences<TestHarness> = {
+  voidFn: _testHarness.voidFn,
+  booleanFn: _testHarness.booleanFn,
+  numberFn: _testHarness.voidFn,
+  objectFn: _testHarness.objectFn,
+  stringFn: _testHarness.stringFn,
+  anyFn: _testHarness.anyFn,
+  unknownFn: _testHarness.unknownFn,
+  "nested.voidFn": _testHarness.nested.voidFn,
+  "nested.booleanFn": _testHarness.nested.booleanFn,
+  "nested.numberFn": _testHarness.nested.numberFn,
+  "nested.objectFn": _testHarness.nested.objectFn,
+  "nested.stringFn": _testHarness.nested.stringFn,
+  "nested.anyFn": _testHarness.nested.anyFn,
+  "nested.unknownFn": _testHarness.nested.unknownFn,
+  "nested.nestedNullish.voidFn": _testHarness.nested.nestedNullish.voidFn,
+  "nested.nestedNullish.booleanFn": _testHarness.nested.nestedNullish.booleanFn,
+  "nested.nestedNullish.numberFn": _testHarness.nested.nestedNullish.numberFn,
+  "nested.nestedNullish.objectFn": _testHarness.nested.nestedNullish.objectFn,
+  "nested.nestedNullish.stringFn": _testHarness.nested.nestedNullish.stringFn,
+  "nested.nestedNullish.anyFn": _testHarness.nested.nestedNullish.anyFn,
+  "nested.nestedNullish.unknownFn": _testHarness.nested.nestedNullish.unknownFn,
+  "nested2.nested2Fn": _testHarness.nested2.nested2Fn,
+};
+
+const _nestedSubset: HarnessSubset<TestHarness, "nested"> = _testHarness.nested;
 
 const _nestedNullishSubset: HarnessSubset<
-  TestDefinition,
-  "nested.nestedNullish"
-> &
-  HarnessSubset<DefinitionSubset<TestDefinition, "nested">, "nestedNullish"> =
-  _testHarness.nested.nestedNullish;
+  HarnessSubset<TestHarness, "nested">,
+  "nestedNullish"
+> = _testHarness.nested.nestedNullish;

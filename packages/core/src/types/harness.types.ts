@@ -10,7 +10,7 @@ export interface HarnessFn<TFn extends AnyFn> {
 }
 
 /**
- * A generic object containing async functons, derived from a {@link Definition} object
+ * A generic object containing async functions, derived from a {@link Definition} object
  */
 export type Harness<TDefinition extends Definition> = {
   readonly [key in keyof TDefinition]: TDefinition[key] extends AnyFn
@@ -23,8 +23,8 @@ export type Harness<TDefinition extends Definition> = {
 /**
  * Any key — nested or not — in a harness that points to a function
  */
-export type HarnessKey<TDefinition extends Definition> = DeepKeyOfType<
-  Harness<TDefinition>,
+export type HarnessKey<THarness extends Harness<Definition>> = DeepKeyOfType<
+  THarness,
   AnyFn
 >;
 
@@ -32,6 +32,8 @@ export type HarnessKey<TDefinition extends Definition> = DeepKeyOfType<
  * Utility type used to get a {@link Harness}'s function using its {@link HarnessKey}
  */
 export type HarnessFnReference<
-  TDefinition extends Definition,
-  TKey extends HarnessKey<TDefinition>
-> = HarnessFn<AnyFn> & DeepValueOf<Harness<TDefinition>, TKey>;
+  THarness extends Harness<Definition>,
+  TKey extends HarnessKey<THarness>
+> = DeepValueOf<THarness, TKey> extends infer Property extends HarnessFn<AnyFn>
+  ? Property
+  : never;

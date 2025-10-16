@@ -2,7 +2,7 @@
   "name": "@libharness/factory",
   "description": "Generic binding layer to link any consumer to any data provider following a shared interface",
   "private": false,
-  "version": "0.0.3",
+  "version": "0.0.4",
   "module": "src/index.ts",
   "main": "lib/index.ts",
   "files": [
