@@ -2,7 +2,7 @@
   "name": "@libharness/factory",
   "description": "Generic binding layer to link any consumer to any data provider following a shared interface",
   "private": false,
-  "version": "0.0.4",
+  "version": "0.0.5",
   "module": "src/index.ts",
   "main": "lib/index.ts",
   "files": [
@@ -40,8 +40,8 @@
   },
   "type": "module",
   "dependencies": {
-    "@libharness/core": "^0.0.4",
-    "@libharness/setup": "^0.0.2",
+    "@libharness/core": "^0.0.5",
+    "@libharness/setup": "^0.0.5",
     "@ubloimmo/front-util": "^0.0.19"
   }
 }
