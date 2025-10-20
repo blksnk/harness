@@ -1,5 +1,5 @@
-import { HarnessConsumer } from "@";
-import { Harness } from "@libharness/core";
+import { HarnessConsumer } from "../index";
+import { definitionToHarness } from "@libharness/core";
 
 type User = {
   id: string;
@@ -28,26 +28,27 @@ type Def = {
   };
 };
 
-type Har = Harness<Def>;
-
-const harness: Har = {
-  login: async (_email, _password) => ({ error: new Error() }),
+const def: Def = {
+  login: (_email, _password) => ({ error: new Error() }),
   flags: {
-    rentVariations: async () => true,
+    rentVariations: () => true,
     nested: {
-      hello: async () => false,
-      withArgs: async (_arg1, _arg2) => {},
+      hello: () => false,
+      withArgs: (_arg1, _arg2) => {},
     },
   },
 };
 
-const C = new HarnessConsumer(harness);
-const S = new HarnessConsumer(harness.flags);
+const harness = definitionToHarness<Def>(def);
+
+const C = new HarnessConsumer<Def>(harness);
 
 C.call("flags.nested.withArgs", true, "");
-S.call("nested.hello");
-C.subset("flags").subset("nested").call("hello");
-S.call("rentVariations");
 C.call("login", "email", "password");
 const CS = C.subset("flags");
 CS.call("rentVariations");
+C.subset("flags").subset("nested").call("withArgs", true, "string");
+const _hello = C.subset("flags").subset("nested").reference("hello");
+const login = C.reference("login");
+
+login("email", "pwd");

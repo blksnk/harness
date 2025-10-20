@@ -1,14 +1,13 @@
 import { HarnessReferenceError } from "@errors";
 import type {
-  AnyFn,
   Definition,
   DefinitionSubset,
   DefinitionSubsetKey,
   Harness,
   HarnessSubset,
-  HarnessSubsetKey,
+  StringKeyOf,
 } from "@types";
-import { isFunction } from "@ubloimmo/front-util";
+import { objectEntries, objectKeys } from "@ubloimmo/front-util/lib/functions";
 import { validateDefinition } from "./definition.utils";
 
 /**
@@ -43,19 +42,33 @@ export function definitionSubset<
  * @returns {HarnessSubset<TDefinition, TSubsetKey>} A subset of the base harness
  */
 export function harnessSubset<
-  THarness extends Harness<Definition>,
-  TSubsetKey extends HarnessSubsetKey<THarness>
+  TDefinition extends Definition,
+  TSubsetKey extends DefinitionSubsetKey<TDefinition> = DefinitionSubsetKey<TDefinition>
 >(
-  harness: THarness,
+  harness: Harness<TDefinition>,
   subsetKey: TSubsetKey
-): HarnessSubset<THarness, TSubsetKey> {
-  const found = harness[subsetKey];
-  if (!found)
-    throw new HarnessReferenceError(subsetKey, "not found in base harness");
-  if (isFunction<AnyFn>(found))
-    throw new HarnessReferenceError(
-      subsetKey,
-      "points to a harness function, expected a harness object"
-    );
-  return found;
+): HarnessSubset<TDefinition, TSubsetKey> {
+  const subset: Partial<HarnessSubset<TDefinition, TSubsetKey>> = {};
+  const prefix = `${subsetKey}.`;
+  objectEntries(harness).forEach(([key, value]) => {
+    const keyStr = key as unknown as string;
+    if (!keyStr.startsWith(prefix)) return;
+    const trimmedKey = keyStr.substring(prefix.length);
+    if (!trimmedKey.length) return;
+    subset[
+      trimmedKey as unknown as StringKeyOf<
+        HarnessSubset<TDefinition, TSubsetKey>
+      >
+    ] = value;
+  });
+
+  const isSubset = (
+    partialSubset: Partial<HarnessSubset<TDefinition, TSubsetKey>>
+  ): partialSubset is HarnessSubset<TDefinition, TSubsetKey> =>
+    !!objectKeys(partialSubset).length;
+
+  if (!isSubset(subset))
+    throw new HarnessReferenceError(subsetKey, "harness subset is empty.");
+
+  return subset;
 }

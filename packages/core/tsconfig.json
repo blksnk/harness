@@ -4,11 +4,11 @@
     "module": "ESNext",
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "moduleResolution": "bundler",
-    "moduleDetection": "force",
+    "moduleDetection": "auto",
     "allowImportingTsExtensions": false,
     "noEmit": false,
     "composite": true,
-    "downlevelIteration": true,
+    "downlevelIteration": false,
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "esModuleInterop": false,
@@ -28,6 +28,8 @@
       "@errors/*": ["./src/errors/*"],
       "@": ["./src"],
       "@/*": ["./src/*"]
-    }
-  }
+    },
+    "types": ["@types/bun"]
+  },
+  "include": ["src/**/*", "index.ts"]
 }

@@ -33,6 +33,7 @@
     "url": "https://github.com/blksnk/harness.git"
   },
   "devDependencies": {
+    "@types/bun": "1.2.0",
     "@typescript-eslint/eslint-plugin": "^5.58.0",
     "@typescript-eslint/parser": "^5.58.0",
     "eslint": "^8.38.0",
@@ -44,6 +45,7 @@
   "scripts": {
     "test:types": "tsc --noEmit",
     "test:lint": "eslint .",
+    "test:unit": "bun test",
     "lib:build": "rm -rf ./lib && tsc",
     "lib:pub": "npm publish --access public",
     "prepublishOnly": "bun lib:build"

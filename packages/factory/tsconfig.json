@@ -1,14 +1,14 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "module": "ESNext",
-    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "module": "Preserve",
+    "lib": ["ESNext"],
     "moduleResolution": "bundler",
     "moduleDetection": "force",
     "allowImportingTsExtensions": false,
     "noEmit": false,
     "composite": true,
-    "downlevelIteration": true,
+    "downlevelIteration": false,
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "esModuleInterop": false,
@@ -20,14 +20,9 @@
     "strict": true,
     "sourceMap": true,
     "paths": {
-      "@types": ["./src/types"],
-      "@types/*": ["./src/types/*"],
-      "@utils": ["./src/utils"],
-      "@utils/*": ["./src/utils/*"],
-      "@errors": ["./src/errors"],
-      "@errors/*": ["./src/errors/*"],
       "@": ["./src"],
       "@/*": ["./src/*"]
     }
-  }
+  },
+  "exclude": ["node_modules/**/*"]
 }

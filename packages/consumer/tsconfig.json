@@ -20,14 +20,9 @@
     "strict": true,
     "sourceMap": true,
     "paths": {
-      "@types": ["./src/types"],
-      "@types/*": ["./src/types/*"],
-      "@utils": ["./src/utils"],
-      "@utils/*": ["./src/utils/*"],
-      "@errors": ["./src/errors"],
-      "@errors/*": ["./src/errors/*"],
       "@": ["./src"],
       "@/*": ["./src/*"]
     }
-  }
+  },
+  "include": ["src/**/*", "index.ts"]
 }

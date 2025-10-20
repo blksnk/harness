@@ -1,6 +1,6 @@
 import type { Definition, Harness } from "@types";
 import { isDefinition } from "./definition.utils";
-import { Predicate } from "@ubloimmo/front-util";
+import { Predicate } from "@ubloimmo/front-util/lib/types";
 
 /**
  * Checks if a given value is a valid {@link Harness} object.

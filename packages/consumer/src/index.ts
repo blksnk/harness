@@ -1,23 +1,24 @@
 import type {
   Definition,
+  DefinitionFnKey,
   DefinitionSubset,
   DefinitionSubsetKey,
   Harness,
   HarnessFnReference,
-  HarnessKey,
 } from "@libharness/core";
 import {
   HarnessCallError,
   HarnessReferenceError,
   harnessSubset,
 } from "@libharness/core";
-import { deepValueOf } from "@ubloimmo/front-util";
 
 /**
  * Exposes methods to interact with a {@link Harness}
  */
 export class HarnessConsumer<TDefinition extends Definition> {
-  constructor(private readonly _harness: Harness<TDefinition>) {}
+  constructor(private readonly _harness: Harness<TDefinition>) {
+    this._harness = _harness;
+  }
 
   /**
    * Returns a reference to any of the harness' functions.
@@ -26,12 +27,12 @@ export class HarnessConsumer<TDefinition extends Definition> {
    * @param {TKey} key - The key of the harness function to reference.
    * @returns {HarnessFnReference<TDefinition, TKey>} The function referenced by the key.
    */
-  public reference<TKey extends HarnessKey<typeof this._harness>>(
+  public reference<TKey extends DefinitionFnKey<TDefinition>>(
     key: TKey
-  ): HarnessFnReference<typeof this._harness, TKey> {
+  ): HarnessFnReference<TDefinition, TKey> {
     try {
-      // @ts-expect-error deep type instanciation
-      return deepValueOf(this._harness, key);
+      if (!(key in this._harness)) throw new HarnessReferenceError(key);
+      return this._harness[key];
     } catch (_) {
       throw new HarnessReferenceError(key);
     }
@@ -46,13 +47,10 @@ export class HarnessConsumer<TDefinition extends Definition> {
    * @param {Parameters<TFn>} ...args - Arguments to pass to the referenced function.
    * @returns {Promise<Awaited<ReturnType<TFn>>>} The result of the referenced function.
    */
-  public async call<
-    TKey extends HarnessKey<typeof this._harness>,
-    TFn extends HarnessFnReference<
-      typeof this._harness,
-      TKey
-    > = HarnessFnReference<typeof this._harness, TKey>
-  >(key: TKey, ...args: Parameters<TFn>): Promise<Awaited<ReturnType<TFn>>> {
+  public async call<TKey extends DefinitionFnKey<TDefinition>>(
+    key: TKey,
+    ...args: Parameters<HarnessFnReference<TDefinition, TKey>>
+  ): ReturnType<HarnessFnReference<TDefinition, TKey>> {
     try {
       return this.reference(key)(...args);
     } catch (error) {
@@ -70,7 +68,12 @@ export class HarnessConsumer<TDefinition extends Definition> {
   public subset<TSubsetKey extends DefinitionSubsetKey<TDefinition>>(
     subsetKey: TSubsetKey
   ): HarnessConsumer<DefinitionSubset<TDefinition, TSubsetKey>> {
-    const subHarness = harnessSubset(this._harness, subsetKey);
-    return new HarnessConsumer(subHarness);
+    const subHarness = harnessSubset<TDefinition, TSubsetKey>(
+      this._harness,
+      subsetKey
+    );
+    return new HarnessConsumer<DefinitionSubset<TDefinition, TSubsetKey>>(
+      subHarness
+    );
   }
 }

@@ -1,6 +1,9 @@
-import type { DeepKeyOfType, DeepValueOf } from "@ubloimmo/front-util";
 import type { AnyFn } from "./global.types";
-import type { Definition } from "./definition.types";
+import type {
+  Definition,
+  DefinitionFnKey,
+  DefinitionFnReference,
+} from "./definition.types";
 
 /**
  * Utility type that converts any function in a {@link Definition} to its async counterpart
@@ -11,29 +14,18 @@ export interface HarnessFn<TFn extends AnyFn> {
 
 /**
  * A generic object containing async functions, derived from a {@link Definition} object
+ * Flattens a {@link Definition}'s nested properties
  */
 export type Harness<TDefinition extends Definition> = {
-  readonly [key in keyof TDefinition]: TDefinition[key] extends AnyFn
-    ? HarnessFn<TDefinition[key]>
-    : TDefinition[key] extends Definition
-    ? Harness<TDefinition[key]>
-    : never;
+  readonly [TKey in DefinitionFnKey<TDefinition>]: HarnessFn<
+    DefinitionFnReference<TDefinition, TKey>
+  >;
 };
 
 /**
- * Any key — nested or not — in a harness that points to a function
- */
-export type HarnessKey<THarness extends Harness<Definition>> = DeepKeyOfType<
-  THarness,
-  AnyFn
->;
-
-/**
- * Utility type used to get a {@link Harness}'s function using its {@link HarnessKey}
+ * Utility type used to get a {@link Harness}'s {@link HarnessFn} using its {@link DefinitionFnKey}
  */
 export type HarnessFnReference<
-  THarness extends Harness<Definition>,
-  TKey extends HarnessKey<THarness>
-> = DeepValueOf<THarness, TKey> extends infer Property extends HarnessFn<AnyFn>
-  ? Property
-  : never;
+  TDefinition extends Definition,
+  TKey extends DefinitionFnKey<TDefinition>
+> = HarnessFn<DefinitionFnReference<TDefinition, TKey>>;

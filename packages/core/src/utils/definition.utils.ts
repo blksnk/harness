@@ -7,12 +7,15 @@ import type {
   Harness,
 } from "@types";
 import {
+  objectEntries,
+  transformObject,
+} from "@ubloimmo/front-util/lib/functions/object.functions";
+import {
   isArray,
   isFunction,
   isObject,
   isString,
-  transformObject,
-} from "@ubloimmo/front-util";
+} from "@ubloimmo/front-util/lib/functions/predicate.functions";
 
 /**
  * Checks if a given value is a valid {@link Definition} object.
@@ -117,12 +120,28 @@ export function validateDefinition<TDefinition extends Definition>(
 export function definitionToHarness<TDefinition extends Definition>(
   definition: TDefinition
 ): Harness<TDefinition> {
-  return transformObject(definition, (value) => {
+  const harness: Partial<Harness<TDefinition>> = {};
+  objectEntries(definition).forEach(([key, value]) => {
     if (isFunction<AnyFn>(value)) {
-      return async function (...args: Parameters<typeof value>) {
-        return await value(...args);
+      harness[key as keyof Harness<TDefinition>] = async (
+        ...args: Parameters<typeof value>
+      ) => {
+        return value(...args);
       };
+      return;
     }
-    return definitionToHarness(value);
-  }) as Harness<TDefinition>;
+    if (!isDefinition(value)) {
+      throw new HarnessValidationError(
+        "Only functions or nested defintions may be converted to harnesses",
+        key
+      );
+    }
+    const nestedHarness: Partial<Harness<TDefinition>> = transformObject(
+      definitionToHarness(value),
+      (v) => v,
+      (nestedKey): `${keyof Harness<TDefinition>}` => `${key}.${nestedKey}`
+    );
+    Object.assign(harness, nestedHarness);
+  });
+  return harness as Harness<TDefinition>;
 }
